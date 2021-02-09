@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CarController;
-use Api
+use App\Http\Controllers\ApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,11 +20,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('api/clients/{id}/cars', [ApiController::class, 'getCars'])
+    ->name('api.clients.cars.show');
+
 Route::get('clients', [ClientController::class, 'index'])
     ->name('clients.index');
-
-Route::get('api/clients/{id}/cars', [ClientController::class, ''])
-    ->name('api.clients.cars.show');
 
 Route::get('clients/create', [ClientController::class, 'create'])
     ->name('clients.create');
@@ -47,11 +47,14 @@ Route::delete('clients/{id}', [ClientController::class, 'destroy'])
 Route::post('clients/{id}/cars', [CarController::class, 'store'])
     ->name('cars.store');
 
-Route::delete('clients/{id}cars/{carId}', [CarController::class, 'destroy'])
+Route::delete('clients/{id}/cars/{carId}', [CarController::class, 'destroy'])
     ->name('cars.destroy');
 
-Route::patch('cars/{id}', [CarController::class, 'update'])
-    ->name('cars.update');
+Route::patch('cars/{id}/addpark', [CarController::class, 'addParking'])
+    ->name('cars.park');
+
+Route::patch('cars/{id}/delpark', [CarController::class, 'removeParking'])
+    ->name('cars.unpark');
 
 
 

@@ -17,20 +17,27 @@ class CarController extends Controller
         return redirect()->route('clients.show', ['id' => $id]);
     }
 
-    public function destroy($carId, $clientId)
+    public function destroy($id, $carId)
     {
         DB::table('cars')
             ->where('id', '=', $carId)
             ->delete();
-        return redirect()->route('clients.show', ['id' => $clientId]);
+        return redirect()->route('clients.show', ['id' => $id]);
     }
 
-    public function update($id)
+    public function removeParking($id)
     {
         DB::table('cars')
             ->where('id', $id)
             ->update(['parking' => 0]);
-        return redirect()
-            ->route('clients.index');
+        return redirect()->route('clients.index');
+    }
+
+    public function addParking($id)
+    {
+        DB::table('cars')
+            ->where('id', $id)
+            ->update(['parking' => 1]);
+        return redirect()->route('clients.index');
     }
 }

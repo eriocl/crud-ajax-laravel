@@ -53,7 +53,7 @@
                         <td class="col-3">{{$car->color}}</td>
                         <td class="col-3">{{$car->number}}</td>
                         <td class="col-1">
-                            <form action="{{route('cars.update', ['id' => $car->id])}}" method="POST">
+                            <form action="{{route('cars.unpark', ['id' => $car->id])}}" method="POST">
                                 @csrf
                                 {{method_field('patch')}}
                                 <button type="submit" class="btn btn-secondary text-dark">Delete</button>
@@ -66,14 +66,15 @@
             @if(count($parkedCars) != 0)
                 @include('paginate')
             @endif
-            <form action="{{route('clients.store')}}"  method="post" class="bg-white p-3 border rounded row">
+            <form action="" id="form-add-parking"  method="post" class="bg-white p-3 border rounded row">
                 @csrf
+                {{method_field('patch')}}
                 <h2 class="h5 text-muted mb-3 text-center">Park the car</h2>
                 <div class="row">
                     <div class="col-6">
                         <label class="text-muted small">Gender</label>
-                        <select class="form-select" name="clientId" id="client">
-                            <option disabled selected value="">...</option>
+                        <select class="form-select" name="clientId" id="client" required>
+                            <option disabled selected value="">Client</option>
                             @foreach($clients as $client)
                                 <option value="{{$client->id}}">{{$client->name}}</option>
                             @endforeach
@@ -82,9 +83,7 @@
                     <div class="col-6">
                         <label class="text-muted small">Gender</label>
                         <select class="form-select" name="carId" id="car">
-                            <option disabled selected value="">...</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
+                            <option disabled selected value="0">Car</option>
                         </select>
                     </div>
                 </div>
@@ -99,17 +98,34 @@
 
     <script>
         let clientSelect = document.querySelector('#client');
-        clientSelect.addEventListener('change', () => {
+        clientSelect.addEventListener('change', async () => {
             let clientId = clientSelect.value;
-            let data = {
-                id: clientId
-            };
-            let response = await fetch('login.php', {
-                method: 'POST',
-                body: JSON.stringify(data),
+            let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            let url = `api/clients/${clientId}/cars`;
+            let response = await fetch(url, {
+                method: 'GET',
+                headers:{
+                    "Content-Type": "application/json",
+                    "Accept": "application/json, text-plain, */*",
+                    "X-Requested-With": "XMLHttpRequest",
+                    "X-CSRF-TOKEN": token
+                }
             });
-            response = await response.json();
-            console.dir(response);
+            let cars = await response.json();
+
+            let carSelect = document.querySelector('#car');
+            carSelect.innerHTML = '';
+            cars.forEach((car) => {
+                let option = document.createElement('option');
+                option.textContent = `${car.brand}   ${car.model}   ${car.color}   ${car.number}`;
+                option.value = car.id;
+                carSelect.append(option);
+            });
+            carSelect.addEventListener('change', () => {
+                if (carSelect.value === 0) return false;
+                let form = document.querySelector('#form-add-parking');
+                form.action = `cars/${carSelect.value}/addpark`;
+            });
         });
     </script>
 

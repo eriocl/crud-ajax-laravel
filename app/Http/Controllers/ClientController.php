@@ -10,11 +10,6 @@ class ClientController extends Controller
 {
     public function index()
     {
-        /*$clients = DB::table('clients')
-            ->join('cars', 'clients.id', '=', 'cars.client_id')
-            ->select('clients.name as name','clients.id as id', 'model', 'number as carNumber', 'cars.id as carId')
-            ->orderBy('name')
-            ->Paginate(10);*/
         $parkedCars = DB::table('cars')
             ->where('parking', 1)
             ->select('brand', 'model', 'color', 'number', 'created_at', 'parking', 'id')
