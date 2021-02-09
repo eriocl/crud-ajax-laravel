@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\CarController;
+use Api
 
 /*
 |--------------------------------------------------------------------------
@@ -17,5 +20,38 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('clients', [\App\Http\Controllers\ClientController::class, 'index'])
+Route::get('clients', [ClientController::class, 'index'])
     ->name('clients.index');
+
+Route::get('api/clients/{id}/cars', [ClientController::class, ''])
+    ->name('api.clients.cars.show');
+
+Route::get('clients/create', [ClientController::class, 'create'])
+    ->name('clients.create');
+
+Route::get('clients/{id}', [ClientController::class, 'show'])
+    ->name('clients.show');
+
+Route::get('clients/{id}/edit', [ClientController::class, 'edit'])
+    ->name('clients.edit');
+
+Route::post('clients', [ClientController::class, 'store'])
+    ->name('clients.store');
+
+Route::patch('clients/{id}', [ClientController::class, 'update'])
+    ->name('clients.update');
+
+Route::delete('clients/{id}', [ClientController::class, 'destroy'])
+    ->name('clients.destroy');
+
+Route::post('clients/{id}/cars', [CarController::class, 'store'])
+    ->name('cars.store');
+
+Route::delete('clients/{id}cars/{carId}', [CarController::class, 'destroy'])
+    ->name('cars.destroy');
+
+Route::patch('cars/{id}', [CarController::class, 'update'])
+    ->name('cars.update');
+
+
+

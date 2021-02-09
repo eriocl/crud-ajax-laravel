@@ -19,7 +19,7 @@ class CreateCarsTable extends Migration
             $table->string('brand');
             $table->string('model');
             $table->string('color');
-            $table->string('car_number');
+            $table->string('number');
             $table->boolean('parking')->default(0);
             $table->timestamp('created_at')->useCurrent();
         });
