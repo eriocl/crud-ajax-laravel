@@ -55,7 +55,7 @@ class ClientController extends Controller
         return view('client.show', compact('client', 'cars'));
     }
 
-    public function edit ($id)
+    public function edit($id)
     {
         $client= DB::table('clients')
             ->where('id', $id)
@@ -63,7 +63,7 @@ class ClientController extends Controller
         return view('client.edit', compact('client'));
     }
 
-    public function update (Request $request, $id)
+    public function update(Request $request, $id)
     {
         $this->validate($request, [
             'client.name' => 'min:3|unique:clients,name,' . $id,
@@ -78,10 +78,13 @@ class ClientController extends Controller
             ->route('clients.show', ['id' => $id]);
     }
 
-    public function destroy ($id)
+    public function destroy($id)
     {
         DB::table('clients')
             ->where('id', '=', $id)
+            ->delete();
+        DB::table('cars')
+            ->where('client_id', '=', $id)
             ->delete();
         return redirect()->route('clients.index');
     }

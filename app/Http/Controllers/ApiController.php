@@ -12,7 +12,6 @@ class ApiController extends Controller
         $cars = DB::table('cars')
             ->where(['client_id'=> $id, 'parking' => 0])
             ->get();
-        $cars = json_decode(json_encode($cars, true));
         return response()->json($cars);
     }
 }

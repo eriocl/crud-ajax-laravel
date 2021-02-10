@@ -16,14 +16,11 @@ use App\Http\Controllers\ApiController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Route::get('api/clients/{id}/cars', [ApiController::class, 'getCars'])
     ->name('api.clients.cars.show');
 
-Route::get('clients', [ClientController::class, 'index'])
+Route::get('/', [ClientController::class, 'index'])
     ->name('clients.index');
 
 Route::get('clients/create', [ClientController::class, 'create'])
@@ -49,6 +46,7 @@ Route::post('clients/{id}/cars', [CarController::class, 'store'])
 
 Route::delete('clients/{id}/cars/{carId}', [CarController::class, 'destroy'])
     ->name('cars.destroy');
+
 
 Route::patch('cars/{id}/addpark', [CarController::class, 'addParking'])
     ->name('cars.park');

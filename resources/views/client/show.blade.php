@@ -61,7 +61,7 @@
                                     <form action="{{route('cars.destroy', ['carId' => $car->carId, 'id' => $client->id])}}" method="POST">
                                         @csrf
                                         {{method_field('delete')}}
-                                        <button type="submit" class="btn btn-secondary text-dark">Delete!!!!!</button>
+                                        <button type="submit" class="btn btn-secondary text-dark">Delete</button>
                                     </form>
                             </td>
                         </tr>

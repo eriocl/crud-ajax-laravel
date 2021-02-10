@@ -27,7 +27,7 @@
                 </tbody>
             </table>
             @if(count($clients) != 0)
-                @include('paginate')
+                @include('paginate-clients')
             @endif
             <div class="row m-1">
                 <a class="btn btn-secondary text-dark col-2 m" href="{{route('clients.create')}}">New client</a>
@@ -63,10 +63,7 @@
                 @endforeach
                 </tbody>
             </table>
-            @if(count($parkedCars) != 0)
-                @include('paginate')
-            @endif
-            <form action="" id="form-add-parking"  method="post" class="bg-white p-3 border rounded row">
+            <form action="" id="form-add-parking"  method="post" class="bg-white p-3 border rounded">
                 @csrf
                 {{method_field('patch')}}
                 <h2 class="h5 text-muted mb-3 text-center">Park the car</h2>
@@ -74,7 +71,7 @@
                     <div class="col-6">
                         <label class="text-muted small">Gender</label>
                         <select class="form-select" name="clientId" id="client" required>
-                            <option disabled selected value="">Client</option>
+                            <option disabled selected value="">Select client</option>
                             @foreach($clients as $client)
                                 <option value="{{$client->id}}">{{$client->name}}</option>
                             @endforeach
@@ -82,27 +79,26 @@
                     </div>
                     <div class="col-6">
                         <label class="text-muted small">Gender</label>
-                        <select class="form-select" name="carId" id="car">
-                            <option disabled selected value="0">Car</option>
+                        <select class="form-select" name="carId" id="car" required>
+                            <option id="car-default" disabled selected value=""> Select car</option>
                         </select>
                     </div>
                 </div>
-                <div class="form-row mt-3 text-right">
-                    <div class="col text-right">
+                <div class="mt-3">
+                    <div class="">
                         <button type="submit" class="btn btn-secondary">Park the car</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
-
     <script>
-        let clientSelect = document.querySelector('#client');
+        const clientSelect = document.querySelector('#client');
         clientSelect.addEventListener('change', async () => {
-            let clientId = clientSelect.value;
-            let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            let url = `api/clients/${clientId}/cars`;
-            let response = await fetch(url, {
+            const clientId = clientSelect.value;
+            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            const url = `api/clients/${clientId}/cars`;
+            const response = await fetch(url, {
                 method: 'GET',
                 headers:{
                     "Content-Type": "application/json",
@@ -111,24 +107,23 @@
                     "X-CSRF-TOKEN": token
                 }
             });
-            let cars = await response.json();
-
-            let carSelect = document.querySelector('#car');
+            const cars = await response.json();
+            const carSelect = document.querySelector('#car');
+            const defaultCar = document.querySelector('#car-default');
             carSelect.innerHTML = '';
+            carSelect.append(defaultCar);
             cars.forEach((car) => {
-                let option = document.createElement('option');
+                const option = document.createElement('option');
                 option.textContent = `${car.brand}   ${car.model}   ${car.color}   ${car.number}`;
                 option.value = car.id;
                 carSelect.append(option);
             });
-            carSelect.addEventListener('change', () => {
-                if (carSelect.value === 0) return false;
-                let form = document.querySelector('#form-add-parking');
-                form.action = `cars/${carSelect.value}/addpark`;
-            });
+        });
+        const carSelect = document.querySelector('#car');
+        carSelect.addEventListener('change', () => {
+            if (carSelect.value === '') return false;
+            const form = document.querySelector('#form-add-parking');
+            form.action = `cars/${carSelect.value}/addpark`;
         });
     </script>
-
-
-
 @endsection
