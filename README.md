@@ -1,3 +1,2 @@
-composer install.
-
-Задать настройки .env.
+composer install
+fix options in  ".env"
